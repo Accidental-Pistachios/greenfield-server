@@ -1,13 +1,13 @@
-var db = require('/config');
+var db = require('../db/config.js');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var Promise = require('bluebird');
-var eventsSchema = require('events.js');
+var events = require('./events.js');
 
 var usersSchema = mongoose.Schema({
   name: String,
   email: String,
-  events: [eventsSchema],
+  events: [events.eventsSchema],
   password: String
 });
 
