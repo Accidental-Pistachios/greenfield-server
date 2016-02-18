@@ -2,11 +2,12 @@ var db = require('/config');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var Promise = require('bluebird');
+var eventsSchema = require('events.js');
 
 var usersSchema = mongoose.Schema({
   name: String,
   email: String,
-  events: [],
+  events: [eventsSchema],
   password: String
 });
 
@@ -22,4 +23,5 @@ usersSchema.pre('save', function(next) {
 });
 
 
-module.exports = User;
+exports.User = User;
+exports.usersSchema = usersSchema;

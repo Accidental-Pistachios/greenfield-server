@@ -13,3 +13,6 @@ var eventsSchema = mongoose.Schema({
 });
 
 var Event = mongoose.model('Event', eventsSchema);
+
+exports.Event = Event;
+exports.eventsSchema;
