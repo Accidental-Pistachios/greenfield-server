@@ -22,26 +22,19 @@ module.exports = {
   },
 
   signIn : function(req, res, next){
-    var name = req.body.name;
+    var email = req.body.email;
     var password = req.body.password;
-    findUser({
-      name : name
-    })
-    .then(function(user){
-      if(!user){
+    findUser({ email : email })
+    .then(function (user) {
+      if (!user) {
         next(new Error('User does not exist!'));
-      } else {
-        //TODO create user.compare 
-        return User.comparePasswords(password)
-          .then(function(foundUser){
-            if(foundUser){
-              //conjuring 
-              var token = jwt.encode(user, 'secret');
-              res.json({token : token});
-            } else {
-              return next(new Error('Password not correct'));
-            }
-          });
+      } else if (User.comparePasswords(password)) {
+        var token = jwt.encode(user, 'secret');
+        var userId = user._id;
+        res.json({token : token, userId : userId});
+      }
+       else {
+        return next(new Error('Password not correct'));
       }
     })
     .fail(function(err){
@@ -51,14 +44,18 @@ module.exports = {
 
   signUp : function(req, res, next){
     //check if user exists
-    findUser({username: username})
+    var email = req.body.email;
+    var password = req.body.password;
+
+    findUser({ email: email })
       .then(function (user) {
         if (user) {
           next(new Error('User already exists!'));
         } else {
           return createUser({
-            name : req.body.name,
-            email : req.body.email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
             events : [],
             password : req.body.password
           });
@@ -66,14 +63,14 @@ module.exports = {
       })
       .then(function(user){
         var token = jwt.encode(user, 'secret');
-        res.json({token : token});
+        var userId = user._id;
+        res.json({
+          token : token,
+          userId : userId
+        });
       })
       .fail(function(err){
         next(new Error('Incorrect password'));
       });
   }
 };
-
-
-
-
