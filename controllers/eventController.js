@@ -10,6 +10,8 @@ var findUser = Q.nbind(User.findOne, User);
 module.exports = {
 
   addEvent: function(req, res, next){
+    console.log('inside addEvent');
+    console.log(req.body);
     createEvent({
       type : req.body.type,
       location : req.body.location,
@@ -20,8 +22,8 @@ module.exports = {
       playerCount : req.body.playerCount,
       skillLevel : req.body.skillLevel
     })
-    .then(function(){
-      res.writeHead(200);
+    .then(function(test){
+      res.writeHead();
       res.end();
     })
     .fail(function(err){
