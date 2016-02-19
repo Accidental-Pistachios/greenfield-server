@@ -24,18 +24,21 @@ module.exports = {
   signIn : function(req, res, next){
     var email = req.body.email;
     var password = req.body.password;
-    console.log(req.body);
     findUser({ email : email })
     .then(function (user) {
       if (!user) {
         next(new Error('User does not exist!'));
-      } else if (User.comparePasswords(password)) {
-        var token = jwt.encode(user, 'secret');
-        var userId = user._id;
-        res.json({token : token, userId : userId});
-      }
-       else {
-        return next(new Error('Password not correct'));
+      } else {
+        return user.comparePasswords(password)
+        .then(function (foundUser) {
+          if (foundUser) {
+            var token = jwt.encode(user, 'secret');
+            var userId = user._id
+            res.json({token: token, userId: userId});
+          } else {
+            return next(new Error('No user'));
+          }
+        });
       }
     })
     .fail(function(err){
