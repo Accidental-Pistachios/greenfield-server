@@ -39,7 +39,7 @@ usersSchema.pre('save', function (next) {
     }
 
     // hash the password along with our new salt
-    bcrypt.hash(user.password, salt, null, function (err, hash) {
+    bcrypt.hash(user.password, salt, function (err, hash) {
       if (err) {
         return next(err);
       }

@@ -1,7 +1,8 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var db = require('./db/config');
+
+mongoose.connect('mongodb://localhost/pug');
 
 var port = 3000;
 

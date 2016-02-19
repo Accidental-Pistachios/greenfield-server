@@ -24,6 +24,7 @@ module.exports = {
   signIn : function(req, res, next){
     var email = req.body.email;
     var password = req.body.password;
+    console.log(req.body);
     findUser({ email : email })
     .then(function (user) {
       if (!user) {
@@ -63,7 +64,6 @@ module.exports = {
       }
     })
     .then(function (user) {
-      console.log("test2");
       var token = jwt.encode(user, 'secret');
       var userId = user._id;
       res.json({ token : token, userId : userId
