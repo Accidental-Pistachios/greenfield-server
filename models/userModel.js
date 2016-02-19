@@ -1,6 +1,6 @@
-var db = require('../db/config.js');
+// var db = require('../db/config.js');
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 var Promise = require('bluebird');
 // var events = require('./events.js');
 

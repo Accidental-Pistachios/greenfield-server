@@ -5,8 +5,8 @@ var db = require('./db/config');
 
 var port = 3000;
 
-require('./utils/middleware')(app, express);
-require('./utils/routes')(app, express);
+require('./utils/middleware.js')(app, express);
+require('./utils/router.js')(app, express);
 
 app.listen(port); 
 
