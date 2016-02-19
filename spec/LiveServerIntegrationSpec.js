@@ -16,7 +16,7 @@ describe("addEvent",function(){
       playerCount: 1,
       skillLevel: 'Hobby'
     };
-    // calling home page api
+    
     server
     .post("/api/events")
     .send(newEvent)
