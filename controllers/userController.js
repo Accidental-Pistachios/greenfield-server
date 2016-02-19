@@ -42,35 +42,35 @@ module.exports = {
     });
   },
 
+  //
   signUp : function(req, res, next){
     //check if user exists
     var email = req.body.email;
     var password = req.body.password;
 
     findUser({ email: email })
-      .then(function (user) {
-        if (user) {
-          next(new Error('User already exists!'));
-        } else {
-          return createUser({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            events : [],
-            password : req.body.password
-          });
-        }
-      })
-      .then(function(user){
-        var token = jwt.encode(user, 'secret');
-        var userId = user._id;
-        res.json({
-          token : token,
-          userId : userId
+    .then(function (user) {
+      if (user) {
+        next(new Error('User already exists!'));
+      } else {
+        return createUser({
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          events : [],
+          password : req.body.password
         });
-      })
-      .fail(function(err){
-        next(new Error('Incorrect password'));
+      }
+    })
+    .then(function (user) {
+      console.log("test2");
+      var token = jwt.encode(user, 'secret');
+      var userId = user._id;
+      res.json({ token : token, userId : userId
       });
+    })
+    .fail(function(err){
+      next(new Error(err));
+    });
   }
 };
