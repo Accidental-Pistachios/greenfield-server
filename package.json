@@ -8,12 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jackie77/greenfield-server.git"
+    "url": "git+https://github.com/Accidental-Pistachios/greenfield-server.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jackie77/greenfield-server/issues"
+    "url": "https://github.com/Accidental-Pistachios/greenfield-server/issues"
   },
-  "homepage": "https://github.com/jackie77/greenfield-server#readme"
+  "homepage": "https://github.com/Accidental-Pistachios/greenfield-server#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0"
+  }
 }
