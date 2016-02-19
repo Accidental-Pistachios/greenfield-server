@@ -28,9 +28,7 @@ module.exports = {
      next(err);
     });
   },
-  
-  // api/events req.method = GET
-  // return all events
+
   allEvents: function (req, res, next) {
   findAllEvents({})
     .then(function (events) {
@@ -46,7 +44,7 @@ module.exports = {
   findUser({id: userId})
     .then(function (user)){
       //add event to events array
-      user.events.push(req.body.event);
+      user.events.push(req.body.eventId);
     })
     .fail(function (error) {
       next(error);
@@ -55,17 +53,24 @@ module.exports = {
 
   removeUserEvent: function (req, res, next) {
   var userId = req.params.id;
+  var eventId = req.body.eventId;
+
   findUser({id: userId})
     .then(function (user)){
       //remove the event from array, syntax below:
       //db.inventory.remove( { type : "food" } )
-      user.events.remove({})
+      //user.events.remove({}) 
+      for(var i = 0; i< user.events.length; i ++) {
+        if(user.events[i]===eventId) {
+          //user.events.splice(i, 1);
+          user.events.remove(user.events[Object.keys(user.events)[i]]); //object[key]
+          break;
+        }
+      }
+
     })
     .fail(function (error) {
       next(error);
     }); 
-
-
   }
 }
-
