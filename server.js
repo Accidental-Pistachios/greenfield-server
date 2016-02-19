@@ -6,7 +6,7 @@ var db = require('./db/config');
 var port = 3000;
 
 require('./utils/middleware')(app, express);
-// require('./utils/routes')(app, express); remove comments when we add routes file
+require('./utils/routes')(app, express);
 
 app.listen(port); 
 
