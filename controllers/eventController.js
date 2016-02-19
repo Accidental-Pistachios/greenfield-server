@@ -1,5 +1,5 @@
 var Event = require('../models/eventModel.js');
-var User = require('../models/userModels.js');
+var User = require('../models/userModel.js');
 var Q = require('q');
 
 var findEvent = Q.nbind(Event.findOne, Event);
@@ -29,7 +29,7 @@ module.exports = {
     });
   },
 
-  allEvents: function (req, res, next) {
+  getEvents: function (req, res, next) {
   findAllEvents({})
     .then(function (events) {
       res.json(events);
@@ -42,7 +42,7 @@ module.exports = {
   checkInUser: function (req, res, next) {
   var userId = req.params.id;
   findUser({id: userId})
-    .then(function (user)){
+    .then(function (user) {
       user.events.push(req.body.eventId);
     })
     .fail(function (error) {
@@ -55,7 +55,7 @@ module.exports = {
   var eventId = req.body.eventId;
 
   findUser({id: userId})
-    .then(function (user)){
+    .then(function (user) {
       for(var i = 0; i< user.events.length; i ++) {
         if(user.events[i]===eventId) {
           user.events.remove(user.events[Object.keys(user.events)[i]]);

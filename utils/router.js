@@ -1,10 +1,10 @@
-var users = require('./../controllers/user.js');
-var events = require('./../controllers/event.js');
+var users = require('./../controllers/userController.js');
+var events = require('./../controllers/eventController.js');
 
 module.exports = function(app) {
   //users routes
   //get requests
-  app.get('/api/users/:id/event', users.getEvents);
+  app.get('/api/users/:id/event', users.getUserEvents);
 
   //post requests
   app.post('/api/users/signup', users.signUp);
