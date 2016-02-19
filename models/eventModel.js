@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 // var bcrypt = require('bcrypt');
 // var Promise = require('bluebird');
 
-var eventsSchema = mongoose.Schema({
+var eventsSchema = new mongoose.Schema({
   type: {
     type : String,
     required : true
@@ -13,19 +13,19 @@ var eventsSchema = mongoose.Schema({
     required : true
   },
   latitudue : {
-    type : Number,
-    required : true
+    type : Number
+    //required : true
   },
   longitude : {
-    type : Number,
-    required : true
+    type : Number
+    //required : true
   },
   startTime : {
-    type : Date,
+    type : String,
     required : true
   },
   endTime : {
-    type : Date,
+    type : String,
     required : true
   }, 
   playerCount : {
@@ -38,7 +38,7 @@ var eventsSchema = mongoose.Schema({
   }
 });
 
-var Event = mongoose.model('Event', eventsSchema);
+//var Event = mongoose.model('Event', eventsSchema);
 
-exports.Event = Event;
+module.exports = mongoose.model('event', eventsSchema);
 exports.eventsSchema;
