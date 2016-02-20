@@ -10,10 +10,12 @@ var createUser = Q.nbind(User.create, User);
 module.exports = {
   
   getUserEvents : function(req, res, next){
+    console.log(req.params);
     findUser({
-      id : req.params.id
+      _id : req.params.id
     })
     .then(function(user){
+      console.log(user);
       res.json(user.events);
     })
     .fail(function(err){
