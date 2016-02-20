@@ -22,8 +22,8 @@ module.exports = {
       playerCount : req.body.playerCount,
       skillLevel : req.body.skillLevel
     })
-    .then(function(test){
-      res.writeHead();
+    .then(function(){
+      res.writeHead(200);
       res.end();
     })
     .fail(function(err){
