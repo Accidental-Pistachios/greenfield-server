@@ -21,7 +21,8 @@ var usersSchema = new mongoose.Schema({
   password: {
     type : String,
     required : true
-  }
+  },
+  salt: String
 });
 
 usersSchema.pre('save', function (next) {
@@ -46,6 +47,7 @@ usersSchema.pre('save', function (next) {
 
       // override the cleartext password with the hashed one
       user.password = hash;
+      user.salt = salt;
       next();
     });
   });
