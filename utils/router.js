@@ -1,7 +1,7 @@
 var users = require('./../controllers/userController.js');
 var events = require('./../controllers/eventController.js');
 
-module.exports = function(app) {
+module.exports = function(app, express) {
   //users routes
   //get requests
   app.get('/api/users/:id/event', users.getUserEvents);
