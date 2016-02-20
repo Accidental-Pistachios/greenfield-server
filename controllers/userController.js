@@ -36,7 +36,7 @@ module.exports = {
             var userId = user._id
             res.json({token: token, userId: userId});
           } else {
-            return next(new Error('No user'));
+            return next(new Error('Wrong password!'));
           }
         });
       }
