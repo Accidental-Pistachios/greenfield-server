@@ -1,21 +1,17 @@
 var User = require('../models/userModel.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
-// Promisify a few mongoose methods with the `q` promise library
+
 var findUser = Q.nbind(User.findOne, User);
 var createUser = Q.nbind(User.create, User);
-// var addEvent = Q.nbind(Event.create, Event);
-// var getAllEvents = Q.nbind(Event.find, Event);
 
 module.exports = {
   
   getUserEvents : function(req, res, next){
-    console.log(req.params);
     findUser({
       _id : req.params.id
     })
     .then(function(user){
-      console.log(user);
       res.json(user.events);
     })
     .fail(function(err){
@@ -50,7 +46,6 @@ module.exports = {
 
   //
   signUp : function(req, res, next){
-    //check if user exists
     var email = req.body.email;
     var password = req.body.password;
 
