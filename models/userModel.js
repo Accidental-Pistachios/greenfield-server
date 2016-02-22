@@ -21,8 +21,7 @@ var usersSchema = new mongoose.Schema({
   password: {
     type : String,
     required : true
-  },
-  salt: String
+  }
 });
 
 usersSchema.pre('save', function (next) {
