@@ -14,7 +14,6 @@ var clearDB = function (done) {
 describe('', function() {
 
   beforeEach(function(done) {
-    // Log out currently signed in user
     clearDB(function () {
       var users = [
         {
