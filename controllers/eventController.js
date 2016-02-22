@@ -51,6 +51,7 @@ module.exports = {
     updateUser(userCondition, userUpdate)
     .then(function(){
       var eventCondition = { _id : eventId };
+      console.log(eventCondition);
       var eventUpdate = { $inc : { playerCount : 1 } };
 
       return updateEvent(eventCondition, eventUpdate);
@@ -66,15 +67,24 @@ module.exports = {
   removeUserEvent: function (req, res, next) {
     var userId = req.params.id;
     var eventId = req.body.eventId;
-
-    findUser({id: userId})
+    findUser({_id: userId})
     .then(function (user) {
       for(var i = 0; i< user.events.length; i ++) {
         if(user.events[i] === eventId) {
-          user.events.remove(user.events[Object.keys(user.events)[i]]);
-          break;
+          user.events.splice(i, 1);
+          user.save();
+          return updateEvent({ _id : eventId }, { $inc : { playerCount : -1 } })
         }
       }
+    })
+    .then(function () {
+      return findEvent({ _id : eventId })
+    })
+    .then(function (foundEvent) {
+      if (foundEvent.playerCount === 0){
+        foundEvent.remove();
+      }
+      res.status(202);
     })
     .fail(function (error) {
       next(error);
