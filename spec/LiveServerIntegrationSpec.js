@@ -1,34 +1,75 @@
 var app = require('../server.js');
-var should = require("should");
-var server = require('supertest')(app);
-// var server = supertest.agent("http://localhost:3000");
+var expect = require('chai').expect;
+var request = require('supertest');
+var mongoose = require('mongoose');
 
-describe("addEvent",function(){
 
-  it("should add an event",function(done){
-    var newEvent = {
-      type : 'basketball',
-      location: '944 Market St San Franciso, CA',
-      latitude: 37.783697,
-      longitude: -122.408966,
-      startTime: new Date('01.02.2012'),
-      endTime: new Date('01.03.2012'),
-      playerCount: 1,
-      skillLevel: 'Hobby'
-    };
-    
-    server
-    .post("/api/events")
-    .send(newEvent)
-    .expect("Content-type",/json/)
-    .expect(200) // THis is HTTP response
-    .end(function(err,res){
-      // HTTP status should be 200
-      res.status.should.equal(200);
-      // Error key should be false.
-      res.body.error.should.equal(false);
-      res.body.data.should.equal(newEvent);
-      done();
+var User = require('../models/userModel');
+var userController = require('../controllers/userController');
+
+var clearDB = function (done) {
+  mongoose.connection.collections['users'].remove(done);
+};
+
+describe('', function() {
+
+  beforeEach(function(done) {
+    // Log out currently signed in user
+    clearDB(function () {
+      var users = [
+        {
+          firstName: 'Magee',
+          lastName: 'May',
+          email: 'magee@magee.com',
+          password: '12345678',
+          events: [] //this should be a default value
+        },
+        {
+          firstName: 'John',
+          lastName: 'Smith',
+          email: 'j@smith.com',
+          password: 'password',
+          events: [] //this should be a default value
+        },
+        {
+          firstName: 'Jack',
+          lastName: 'Black',
+          email: 'j@b.com',
+          password: 'rockon',
+          events: [], //this should be a default value
+        }
+      ];
+      User.create(users, done);
+    });
+
+  });
+
+  describe('Account Creation:', function() {
+
+    it('Signup creates a new user', function(done) {
+      request(app)
+        .post('/api/users/signup')
+        .send({
+          'email': 'Svnh@gmail.com',
+          'firstName': 'Svnh',
+          'lastName': 'Smith',
+          'password': 'Svnh' })
+        .expect(302)
+        .end(function(err) {
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {
+            User.findOne({'email': 'Svnh@gmail.com'})
+            .exec(function(err, user) {
+              expect(user.email).to.equal('Svnh@gmail.com');
+              expect(user.firstName).to.equal('Svnh');
+              expect(user.lastName).to.equal('Smith');
+              expect(user.password).to.exist;
+              done();
+            });
+          }
+        });
     });
   });
 

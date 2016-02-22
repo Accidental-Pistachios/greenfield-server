@@ -33,7 +33,7 @@ module.exports = {
         .then(function (foundUser) {
           if (foundUser) {
             var token = jwt.encode(user, 'secret');
-            var userId = user._id
+            var userId = user._id;
             res.json({token: token, userId: userId});
           } else {
             return next(new Error('Wrong password!'));
@@ -68,8 +68,7 @@ module.exports = {
     .then(function (user) {
       var token = jwt.encode(user, 'secret');
       var userId = user._id;
-      res.json({ token : token, userId : userId
-      });
+      res.status(302).json({ token : token, userId : userId });
     })
     .fail(function(err){
       next(new Error(err));
