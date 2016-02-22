@@ -3,70 +3,75 @@ var expect = require('chai').expect;
 var request = require('supertest');
 var mongoose = require('mongoose');
 
-var Event = require('../models/userModel');
-var userController = require('../controllers/userController');
+var Event = require('../models/eventModel');
+var eventController = require('../controllers/eventController');
 
 var clearDB = function (done) {
-  mongoose.connection.collections['users'].remove(done);
+  mongoose.connection.collections['events'].remove(done);
 };
 
 describe('', function() {
 
   beforeEach(function(done) {
-    // Log out currently signed in user
     clearDB(function () {
-      var users = [
+      var events = [
         {
-          firstName: 'Magee',
-          lastName: 'May',
-          email: 'magee@magee.com',
-          password: '12345678'
+          type: 'soccer',
+          location: '19th & Dolores St, San Francisco, CA 94114',
+          latitude: 37.759819,
+          longitude: -122.426036,
+          startTime: new Date('December 17, 2020 03:24:00'),
+          endTime: new Date('December 17, 2020 05:24:00'),
+          skillLevel: 'Professional'
         },
         {
-          firstName: 'John',
-          lastName: 'Smith',
-          email: 'j@smith.com',
-          password: 'password'
-        },
-        {
-          firstName: 'Jack',
-          lastName: 'Black',
-          email: 'j@b.com',
-          password: 'rockon'
+          type: 'basketball',
+          location: '19th & Dolores St, San Francisco, CA 94114',
+          latitude: 37.759819,
+          longitude: -122.426036,
+          startTime: new Date('December 17, 2020 03:24:00'),
+          endTime: new Date('December 17, 2020 05:24:00'),
+          skillLevel: 'Hobby'
         }
       ];
-      User.create(users, done);
+      Event.create(events, done);
     });
   });
 
-  describe('Account Creation:', function() {
+  describe('Event Creation:', function() {
 
-    it('Signup creates a new user', function(done) {
+    it('Add Event method creates a new event', function(done) {
       request(app)
-        .post('/api/users/signup')
+        .post('/api/events')
         .send({
-          'email': 'Svnh@gmail.com',
-          'firstName': 'Svnh',
-          'lastName': 'Smith',
-          'password': 'Svnh' })
+          type: 'tennis',
+          location: '19th & Dolores St, San Francisco, CA 94114',
+          latitude: 37.759819,
+          longitude: -122.426036,
+          startTime: new Date('December 17, 2020 03:24:00'),
+          endTime: new Date('December 17, 2020 05:24:00'),
+          skillLevel: 'Hobby'
+        })
         .expect(201)
         .end(function(err) {
           if (err) {
             console.error(err);
             done(err);
           } else {
-            User.findOne({'email': 'Svnh@gmail.com'})
-            .exec(function(err, user) {
-              expect(user.email).to.equal('Svnh@gmail.com');
-              expect(user.firstName).to.equal('Svnh');
-              expect(user.lastName).to.equal('Smith');
-              expect(user.password).to.exist;
-              expect(user.events).to.exist;
+            Event.findOne({'type': 'tennis'})
+            .exec(function(err, newEvent) {
+              console.log(newEvent);
+              expect(newEvent.type).to.equal('tennis');
+              expect(newEvent.location).to.equal('19th & Dolores St, San Francisco, CA 94114');
+              expect(newEvent.latitude).to.equal(37.759819);
+              expect(newEvent.longitude).to.equal(-122.426036);
+              expect(newEvent.startTime).to.exist;
+              expect(newEvent.startTime).to.exist;
+              expect(newEvent.skillLevel).to.equal('Hobby');
               done();
             });
           }
         });
     });
   });
-
 });
