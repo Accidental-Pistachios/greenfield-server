@@ -17,7 +17,10 @@ var usersSchema = new mongoose.Schema({
     required : true,
     unique : true
   },
-  events: [], //will hold ID's
+  events: {
+    type: Array,
+    default: []
+  }, //will hold ID's
   password: {
     type : String,
     required : true

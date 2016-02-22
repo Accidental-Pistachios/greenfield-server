@@ -12,13 +12,13 @@ var eventsSchema = new mongoose.Schema({
     type : String,
     required : true
   },
-  latitudue : {
+  latitude : {
     type : Number
-    //required : true
+    required : true
   },
   longitude : {
     type : Number
-    //required : true
+    required : true
   },
   startTime : {
     type : Date,
@@ -38,7 +38,4 @@ var eventsSchema = new mongoose.Schema({
   }
 });
 
-//var Event = mongoose.model('Event', eventsSchema);
-
 module.exports = mongoose.model('event', eventsSchema);
-exports.eventsSchema;

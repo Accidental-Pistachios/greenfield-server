@@ -14,7 +14,7 @@ module.exports = {
     })
     .then(function(user){
       console.log(user);
-      res.json(user.events);
+      res.status(200).json(user.events);
     })
     .fail(function(err){
       next(err);
@@ -34,7 +34,7 @@ module.exports = {
           if (foundUser) {
             var token = jwt.encode(user, 'secret');
             var userId = user._id;
-            res.json({token: token, userId: userId});
+            res.status(202).json({token: token, userId: userId});
           } else {
             return next(new Error('Wrong password!'));
           }
@@ -68,7 +68,7 @@ module.exports = {
     .then(function (user) {
       var token = jwt.encode(user, 'secret');
       var userId = user._id;
-      res.status(302).json({ token : token, userId : userId });
+      res.status(201).json({ token : token, userId : userId });
     })
     .fail(function(err){
       next(new Error(err));
