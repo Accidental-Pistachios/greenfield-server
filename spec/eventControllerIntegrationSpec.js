@@ -3,8 +3,7 @@ var expect = require('chai').expect;
 var request = require('supertest');
 var mongoose = require('mongoose');
 
-
-var User = require('../models/userModel');
+var Event = require('../models/userModel');
 var userController = require('../controllers/userController');
 
 var clearDB = function (done) {
@@ -21,27 +20,23 @@ describe('', function() {
           firstName: 'Magee',
           lastName: 'May',
           email: 'magee@magee.com',
-          password: '12345678',
-          events: [] //this should be a default value
+          password: '12345678'
         },
         {
           firstName: 'John',
           lastName: 'Smith',
           email: 'j@smith.com',
-          password: 'password',
-          events: [] //this should be a default value
+          password: 'password'
         },
         {
           firstName: 'Jack',
           lastName: 'Black',
           email: 'j@b.com',
-          password: 'rockon',
-          events: [], //this should be a default value
+          password: 'rockon'
         }
       ];
       User.create(users, done);
     });
-
   });
 
   describe('Account Creation:', function() {
@@ -66,29 +61,11 @@ describe('', function() {
               expect(user.firstName).to.equal('Svnh');
               expect(user.lastName).to.equal('Smith');
               expect(user.password).to.exist;
+              expect(user.events).to.exist;
               done();
             });
           }
         });
-    });
-
-    it('Signs in an existing user', function(done){
-      request(app)
-      .post('/api/users/signin')
-      .send({
-        'email' : 'j@smith.com',
-        'password' : 'password'
-      })
-      .expect(202)
-      .end(function(err, response){
-        if(err){
-          console.error(err);
-          done(err);
-        } else {
-          expect(response.body.userId).to.be.a('string');
-          done();
-        }
-      });
     });
   });
 
