@@ -1,7 +1,4 @@
-// var db = require('./db/config.js');
 var mongoose = require('mongoose');
-// var bcrypt = require('bcrypt');
-// var Promise = require('bluebird');
 
 var eventsSchema = new mongoose.Schema({
   type: {
