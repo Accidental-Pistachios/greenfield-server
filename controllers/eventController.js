@@ -2,16 +2,16 @@ var Event = require('../models/eventModel.js');
 var User = require('../models/userModel.js');
 var Q = require('q');
 
+var updateEvent = Q.nbind(Event.update, Event);
 var findEvent = Q.nbind(Event.findOne, Event);
 var createEvent = Q.nbind(Event.create, Event);
 var findAllEvents = Q.nbind(Event.find, Event);
 var findUser = Q.nbind(User.findOne, User);
+var updateUser = Q.nbind(User.update, User);
 
 module.exports = {
 
   addEvent: function(req, res, next){
-    console.log('inside addEvent');
-    console.log(req.body);
     createEvent({
       type : req.body.type,
       location : req.body.location,
@@ -42,13 +42,24 @@ module.exports = {
   },
 
   checkInUser: function (req, res, next) {
-  var userId = req.params.id;
-  findUser({id: userId})
-    .then(function (user) {
-      user.events.push(req.body.eventId);
+    //TODO need to add logic to prevent user from checking in multiple times
+    var userId = req.params.id;
+    var eventId = req.body.eventId;
+    var userCondition = { _id : userId };
+    var userUpdate = { $push : { events : eventId } };
+    
+    updateUser(userCondition, userUpdate)
+    .then(function(){
+      var eventCondition = { _id : eventId };
+      var eventUpdate = { $inc : { playerCount : 1 } };
+
+      return updateEvent(eventCondition, eventUpdate);
     })
-    .fail(function (error) {
-      next(error);
+    .then(function(){
+      res.sendStatus(200);
+    })
+    .fail(function(err){
+      console.error(new Error('Could not update event'));
     });
   },
 
@@ -67,6 +78,6 @@ module.exports = {
     })
     .fail(function (error) {
       next(error);
-    }); 
+    });
   }
-}
+};
