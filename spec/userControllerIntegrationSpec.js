@@ -21,22 +21,19 @@ describe('', function() {
           firstName: 'Magee',
           lastName: 'May',
           email: 'magee@magee.com',
-          password: '12345678',
-          events: [] //this should be a default value
+          password: '12345678'
         },
         {
           firstName: 'John',
           lastName: 'Smith',
           email: 'j@smith.com',
-          password: 'password',
-          events: [] //this should be a default value
+          password: 'password'
         },
         {
           firstName: 'Jack',
           lastName: 'Black',
           email: 'j@b.com',
-          password: 'rockon',
-          events: [], //this should be a default value
+          password: 'rockon'
         }
       ];
       User.create(users, done);
@@ -66,6 +63,7 @@ describe('', function() {
               expect(user.firstName).to.equal('Svnh');
               expect(user.lastName).to.equal('Smith');
               expect(user.password).to.exist;
+              expect(user.events).to.exist;
               done();
             });
           }
