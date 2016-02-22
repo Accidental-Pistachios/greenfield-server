@@ -51,7 +51,6 @@ module.exports = {
     updateUser(userCondition, userUpdate)
     .then(function(){
       var eventCondition = { _id : eventId };
-      console.log(eventCondition);
       var eventUpdate = { $inc : { playerCount : 1 } };
 
       return updateEvent(eventCondition, eventUpdate);
@@ -84,7 +83,7 @@ module.exports = {
       if (foundEvent.playerCount === 0){
         foundEvent.remove();
       }
-      res.status(202);
+      res.sendStatus(202);
     })
     .fail(function (error) {
       next(error);
