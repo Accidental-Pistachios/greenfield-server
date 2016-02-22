@@ -13,11 +13,11 @@ var eventsSchema = new mongoose.Schema({
     required : true
   },
   latitude : {
-    type : Number
+    type : Number,
     required : true
   },
   longitude : {
-    type : Number
+    type : Number,
     required : true
   },
   startTime : {
@@ -27,7 +27,7 @@ var eventsSchema = new mongoose.Schema({
   endTime : {
     type : Date,
     required : true
-  }, 
+  },
   playerCount : {
     type : Number,
     default : 1
