@@ -54,7 +54,7 @@ describe('', function() {
           'firstName': 'Svnh',
           'lastName': 'Smith',
           'password': 'Svnh' })
-        .expect(302)
+        .expect(201)
         .end(function(err) {
           if (err) {
             console.error(err);
@@ -70,6 +70,25 @@ describe('', function() {
             });
           }
         });
+    });
+
+    it('Signs in an existing user', function(done){
+      request(app)
+      .post('/api/users/signin')
+      .send({
+        'email' : 'j@smith.com',
+        'password' : 'password'
+      })
+      .expect(202)
+      .end(function(err, response){
+        if(err){
+          console.error(err);
+          done(err);
+        } else {
+          expect(response.body.userId).to.be.a('string');
+          done();
+        }
+      });
     });
   });
 
