@@ -12,6 +12,7 @@ var updateUser = Q.nbind(User.update, User);
 module.exports = {
 
   addEvent: function(req, res, next){
+    //TODO check if an event already exists in time and place
     createEvent({
       type : req.body.type,
       location : req.body.location,
@@ -22,9 +23,8 @@ module.exports = {
       playerCount : req.body.playerCount,
       skillLevel : req.body.skillLevel
     })
-    .then(function(){
-      res.writeHead(200);
-      res.end();
+    .then(function (newEvent){
+      res.status(201).json(newEvent);
     })
     .fail(function(err){
      next(err);
@@ -32,9 +32,9 @@ module.exports = {
   },
 
   getEvents: function (req, res, next) {
-  findAllEvents({})
+    findAllEvents()
     .then(function (events) {
-      res.json(events);
+      res.status(200).json(events);
     })
     .fail(function (error) {
       next(error);
@@ -56,7 +56,7 @@ module.exports = {
       return updateEvent(eventCondition, eventUpdate);
     })
     .then(function(){
-      res.sendStatus(200);
+      res.sendStatus(202);
     })
     .fail(function(err){
       console.error(new Error('Could not update event'));
@@ -64,13 +64,13 @@ module.exports = {
   },
 
   removeUserEvent: function (req, res, next) {
-  var userId = req.params.id;
-  var eventId = req.body.eventId;
+    var userId = req.params.id;
+    var eventId = req.body.eventId;
 
-  findUser({id: userId})
+    findUser({id: userId})
     .then(function (user) {
       for(var i = 0; i< user.events.length; i ++) {
-        if(user.events[i]===eventId) {
+        if(user.events[i] === eventId) {
           user.events.remove(user.events[Object.keys(user.events)[i]]);
           break;
         }
