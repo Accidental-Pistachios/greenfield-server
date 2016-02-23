@@ -6,14 +6,23 @@ var mongoose = require('mongoose');
 var Event = require('../models/eventModel');
 var eventController = require('../controllers/eventController');
 
-var clearDB = function (done) {
+
+var User = require('../models/userModel');
+var userController = require('../controllers/userController');
+
+
+var clearDBevent = function (done) {
   mongoose.connection.collections['events'].remove(done);
+};
+
+var clearDBuser = function (done) {
+  mongoose.connection.collections['users'].remove(done);
 };
 
 describe('Event Integration Tests', function() {
 
   beforeEach(function(done) {
-    clearDB(function () {
+    clearDBevent(function () {
       var events = [
         {
           type: 'soccer',
@@ -36,6 +45,32 @@ describe('Event Integration Tests', function() {
       ];
       Event.create(events, done);
     });
+  });
+  beforeEach(function(done) {
+    clearDBuser(function () {
+      var users = [
+        {
+          firstName: 'Magee',
+          lastName: 'May',
+          email: 'magee@magee.com',
+          password: '12345678'
+        },
+        {
+          firstName: 'John',
+          lastName: 'Smith',
+          email: 'j@smith.com',
+          password: 'password'
+        },
+        {
+          firstName: 'Jack',
+          lastName: 'Black',
+          email: 'j@b.com',
+          password: 'rockon'
+        }
+      ];
+      User.create(users, done);
+    });
+
   });
 
   describe('Event Creation:', function() {
@@ -99,5 +134,14 @@ describe('Event Integration Tests', function() {
         }
       });
     });
+
+    xit('Should remove an user from event', function(done) {
+      var testUser;
+
+//      request(app)
+//      .delete('/api/events/users/'+)
+    });
+
+
   });
 });
