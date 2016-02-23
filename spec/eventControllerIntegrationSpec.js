@@ -76,7 +76,7 @@ describe('Event Integration Tests', function() {
   });
 
   describe('Event Creation:', function() {
-    it('Add Event method creates a new event', function(done) {
+    it('Add Event method creates a new event, and this event exist in creator\'s events array', function(done) {
       //event created by user 'John' for testing purpose
       var testUserId;
       User.findOne({'firstName':'John'})
@@ -110,7 +110,12 @@ describe('Event Integration Tests', function() {
               expect(newEvent.startTime).to.exist;
               expect(newEvent.skillLevel).to.equal('Hobby');
               expect(newEvent.playerCount).to.equal(1);
-              done();
+              
+              User.findOne({'firstName':'John'})  
+              .then(function (user) {
+                expect(user.events[0]).to.equal(newEvent._id.toString());
+                done();
+              })
             });
           }
         });
