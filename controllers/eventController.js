@@ -39,6 +39,22 @@ module.exports = {
       skillLevel : req.body.skillLevel
     })
     .then(function (newEvent){
+      //TODO : Make sure that front end attaches userId to req.body
+      var userIdObj = {
+        id : req.body.userId
+      };
+
+      var eventIdObj = {
+        eventId : newEvent._id
+      };
+
+      var fakeReq = {
+        params : userIdObj,
+        body : eventIdObj
+      };
+
+      exports.checkInUser(fakeReq, res);
+
       res.status(201).json(newEvent);
     })
     .fail(function(err){
@@ -73,11 +89,13 @@ module.exports = {
     //TODO need to add logic to prevent user from checking in multiple times
     var userId = req.params.id;
     var eventId = req.body.eventId;
+    console.log("params>>>>>", req.params);
     var userCondition = { _id : userId };
     var userUpdate = { $push : { events : eventId } };
     
     updateUser(userCondition, userUpdate)
     .then(function(){
+      console.log("HELLO")
       var eventCondition = { _id : eventId };
       var eventUpdate = { $inc : { playerCount : 1 } };
 
