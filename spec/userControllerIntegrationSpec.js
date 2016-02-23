@@ -98,7 +98,7 @@ describe('', function() {
       User.findOne({'firstName':'Magee'})
       .then(function(user){
         testUserId = user._id;
-
+       
       request(app)
       .get('/api/users/'+testUserId+'/event')
       .expect(200)
