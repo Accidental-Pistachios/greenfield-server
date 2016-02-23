@@ -89,29 +89,18 @@ describe('', function() {
     });
   });
 
-  describe('Check In User:', function(){
-
-    xit('Checks in a user', function(done){
-      request(app)
-      .post('/api/events/users/:id')
-      .send({
-
-      });
-    });
-  });
-
-  describe('User event management :', function(){
-    var testId;
+  describe('User event retrieval :', function(){
+    var testUserId;
 
     
     it('gets a user\'s events', function(done){
+      
       User.findOne({'firstName':'Magee'})
-      .then(function(response){
-        testId = response._id;
-       
+      .then(function(user){
+        testUserId = user._id;
 
       request(app)
-      .get('/api/users/'+testId+'/event')
+      .get('/api/users/'+testUserId+'/event')
       .expect(200)
       .end(function(err, response){
         if(err){
@@ -124,17 +113,5 @@ describe('', function() {
       });
       });
     });
-
-
   });
-
 });
-
-
-
-
-
-
-
-
-

@@ -11,18 +11,20 @@ var User = require('../models/userModel');
 var userController = require('../controllers/userController');
 
 
-var clearDBevent = function (done) {
-  mongoose.connection.collections['events'].remove(done);
+var clearDB = function (done) {
+  mongoose.connection.collections['events'].remove(function(){
+    mongoose.connection.collections['users'].remove(done);
+  });
 };
 
-var clearDBuser = function (done) {
-  mongoose.connection.collections['users'].remove(done);
-};
+
+var testUserId;
+var testEventId;
 
 describe('Event Integration Tests', function() {
 
   beforeEach(function(done) {
-    clearDBevent(function () {
+    clearDB(function () {
       var events = [
         {
           type: 'soccer',
@@ -43,11 +45,9 @@ describe('Event Integration Tests', function() {
           skillLevel: 'Hobby'
         }
       ];
-      Event.create(events, done);
-    });
-  });
-  beforeEach(function(done) {
-    clearDBuser(function () {
+
+      
+ 
       var users = [
         {
           firstName: 'Magee',
@@ -68,44 +68,53 @@ describe('Event Integration Tests', function() {
           password: 'rockon'
         }
       ];
-      User.create(users, done);
-    });
 
+      Event.create(events, function(){
+        User.create(users, done);
+      });
+    });
   });
 
   describe('Event Creation:', function() {
-
     it('Add Event method creates a new event', function(done) {
-      request(app)
-      .post('/api/events')
-      .send({
-        type: 'tennis',
-        location: '19th & Dolores St, San Francisco, CA 94114',
-        latitude: 37.759819,
-        longitude: -122.426036,
-        startTime: new Date('December 17, 2020 03:24:00'),
-        endTime: new Date('December 17, 2020 05:24:00'),
-        skillLevel: 'Hobby'
+      //event created by user 'John' for testing purpose
+      var testUserId;
+      User.findOne({'firstName':'John'})
+      .then(function(user){
+        testUserId = user._id;
+        request(app)
+        .post('/api/events')
+        .send({
+          type: 'tennis',
+          location: '19th & Dolores St, San Francisco, CA 94114',
+          latitude: 37.759819,
+          longitude: -122.426036,
+          startTime: new Date('December 17, 2020 03:24:00'),
+          endTime: new Date('December 17, 2020 05:24:00'),
+          skillLevel: 'Hobby',
+          userId: testUserId
+        })
+        .expect(202)
+        .end(function(err) {
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {
+            Event.findOne({'type': 'tennis'})
+            .exec(function(err, newEvent) {
+              expect(newEvent.type).to.equal('tennis');
+              expect(newEvent.location).to.equal('19th & Dolores St, San Francisco, CA 94114');
+              expect(newEvent.latitude).to.equal(37.759819);
+              expect(newEvent.longitude).to.equal(-122.426036);
+              expect(newEvent.startTime).to.exist;
+              expect(newEvent.startTime).to.exist;
+              expect(newEvent.skillLevel).to.equal('Hobby');
+              expect(newEvent.playerCount).to.equal(1);
+              done();
+            });
+          }
+        });
       })
-      .expect(201)
-      .end(function(err) {
-        if (err) {
-          console.error(err);
-          done(err);
-        } else {
-          Event.findOne({'type': 'tennis'})
-          .exec(function(err, newEvent) {
-            expect(newEvent.type).to.equal('tennis');
-            expect(newEvent.location).to.equal('19th & Dolores St, San Francisco, CA 94114');
-            expect(newEvent.latitude).to.equal(37.759819);
-            expect(newEvent.longitude).to.equal(-122.426036);
-            expect(newEvent.startTime).to.exist;
-            expect(newEvent.startTime).to.exist;
-            expect(newEvent.skillLevel).to.equal('Hobby');
-            done();
-          });
-        }
-      });
     });
 
     it('Get event method gets all events', function(done) {
@@ -136,12 +145,42 @@ describe('Event Integration Tests', function() {
     });
 
     xit('Should remove an user from event', function(done) {
-      var testUser;
-
+      
 //      request(app)
 //      .delete('/api/events/users/'+)
     });
 
+    it('should check in a user', function(done){
+      var testEventId;
 
+      Event.findOne({type : 'soccer'})
+      .then(function(thisEvent){
+        testEventId = thisEvent._id;
+
+        User.findOne({'firstName':'Magee'})
+        .then(function(user){
+          testUserId = user._id;
+   
+          request(app)
+          .post('/api/events/users/'+testUserId+'/')
+          .send({
+            eventId : testEventId
+          })
+          .expect(202)
+          .end(function(err, response){
+            if(err){
+              console.error(err);
+              done(err);
+            } else {
+              User.findOne({'firstName' : 'Magee'})
+              .then(function(user){
+                expect(user.events[0]).to.equal(testEventId.toString());
+                done();
+              });
+            }
+          });
+        });
+      });
+    });
   });
 });

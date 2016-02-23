@@ -32,6 +32,9 @@ var eventsSchema = new mongoose.Schema({
   skillLevel : {
     type : String,
     default : 'Hobby'
+  },
+  userId : {
+    type : String
   }
 });
 

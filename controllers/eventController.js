@@ -11,6 +11,27 @@ var updateUser = Q.nbind(User.update, User);
 
 module.exports = {
 
+  checkInUser: function (req, res, next) {
+    //TODO need to add logic to prevent user from checking in multiple times
+    var userId = req.params.id;
+    var eventId = req.body.eventId;
+    var userCondition = { _id : userId };
+    var userUpdate = { $push : { events : eventId.toString() } };
+    
+    updateUser(userCondition, userUpdate)
+    .then(function(){
+      var eventCondition = { _id : eventId };
+      var eventUpdate = { $inc : { playerCount : 1 } };
+      return updateEvent(eventCondition, eventUpdate);
+    })
+    .then(function(ue){
+      res.sendStatus(202); //update the event playercount
+    })
+    .fail(function(err){
+      console.error(new Error('Could not update event'));
+    });
+  },
+
   addEvent: function(req, res, next){
     //TODO check if an event already exists in time and place
     createEvent({
@@ -24,8 +45,23 @@ module.exports = {
       skillLevel : req.body.skillLevel
     })
     .then(function (newEvent){
-      res.status(201).json(newEvent);
+      //TODO : Make sure that front end attaches userId to req.body
+      var userIdObj = {
+        id : req.body.userId || 'faking userID, frontend attach uId here!!!'
+      };
+      var eventIdObj = {
+        eventId : newEvent._id
+      };
+      
+      return newReq = {
+        params : userIdObj,
+        body : eventIdObj
+      }
     })
+    .then(function (newReq) {
+      return module.exports.checkInUser(newReq, res)
+    })
+
     .fail(function(err){
      next(err);
     });
@@ -38,28 +74,6 @@ module.exports = {
     })
     .fail(function (error) {
       next(error);
-    });
-  },
-
-  checkInUser: function (req, res, next) {
-    //TODO need to add logic to prevent user from checking in multiple times
-    var userId = req.params.id;
-    var eventId = req.body.eventId;
-    var userCondition = { _id : userId };
-    var userUpdate = { $push : { events : eventId } };
-    
-    updateUser(userCondition, userUpdate)
-    .then(function(){
-      var eventCondition = { _id : eventId };
-      var eventUpdate = { $inc : { playerCount : 1 } };
-
-      return updateEvent(eventCondition, eventUpdate);
-    })
-    .then(function(){
-      res.sendStatus(202);
-    })
-    .fail(function(err){
-      console.error(new Error('Could not update event'));
     });
   },
 
