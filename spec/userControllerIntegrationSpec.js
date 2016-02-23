@@ -92,34 +92,26 @@ describe('', function() {
   describe('User event retrieval :', function(){
     var testUserId;
 
+    
     it('gets a user\'s events', function(done){
       
       User.findOne({'firstName':'Magee'})
-      .then(function(response){
-        testId = response._id;
-
-        request(app)
-        .get('/api/users/'+testId+'/event')
-        .expect(200)
-        .end(function(err, response){
-          if(err){
-            console.error(err);
-            done(err);
-          } else {
-            expect(response.body).to.be.a('array');
-            done();
-          }
-        });
+      .then(function(user){
+        testUserId = user._id;
+       
+      request(app)
+      .get('/api/users/'+testUserId+'/event')
+      .expect(200)
+      .end(function(err, response){
+        if(err){
+          console.error(err);
+          done(err);
+        } else {
+          expect(response.body).to.be.a('array');
+          done();
+        }
+      });
       });
     });
   });
 });
-
-
-
-
-
-
-
-
-

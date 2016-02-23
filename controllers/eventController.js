@@ -12,19 +12,49 @@ var updateUser = Q.nbind(User.update, User);
 module.exports = {
 
   /*
+   Input
+     userId String
+     eventId String
+   Output
+     response status 202
+  */
+
+  checkInUser: function (req, res, next) {
+    //TODO need to add logic to prevent user from checking in multiple times
+    var userId = req.params.id;
+    var eventId = req.body.eventId;
+    var userCondition = { _id : userId };
+    var userUpdate = { $push : { events : eventId.toString() } };
+    
+    updateUser(userCondition, userUpdate)
+    .then(function(){
+      var eventCondition = { _id : eventId };
+      var eventUpdate = { $inc : { playerCount : 1 } };
+      return updateEvent(eventCondition, eventUpdate);
+    })
+    .then(function(ue){
+      res.sendStatus(202); //update the event playercount
+    })
+    .fail(function(err){
+      console.error(new Error('Could not update event'));
+    });
+  },
+
+  /*
     Input
-      type String
-      location String
-      latitude Number
-      longitude Number
-      startTime Date
-      endTime Date
-      playerCount Number
-      skillLevel String
-      userId String
+     type String
+     location String
+     latitude Number
+     longitude Number
+     startTime Date
+     endTime Date
+     playerCount Number
+     skillLevel String
+     userId String
+
     Output
-      event object
-      response status 201
+     event object
+     response status 202
   */
   addEvent: function(req, res, next){
     //TODO check if an event already exists in time and place
@@ -41,33 +71,34 @@ module.exports = {
     .then(function (newEvent){
       //TODO : Make sure that front end attaches userId to req.body
       var userIdObj = {
-        id : req.body.userId
+        id : req.body.userId || 'faking userID, frontend attach uId here!!!'
       };
-
       var eventIdObj = {
         eventId : newEvent._id
       };
-
-      var fakeReq = {
+      
+      return newReq = {
         params : userIdObj,
         body : eventIdObj
-      };
-
-      exports.checkInUser(fakeReq, res);
-
-      res.status(201).json(newEvent);
+      }
     })
+    .then(function (newReq) {
+      return module.exports.checkInUser(newReq, res)
+    })
+
     .fail(function(err){
      next(err);
     });
   },
 
+
+
   /*
     Input
     Output
-      events Array
-      response status 200
-  */
+     events Array
+     response status 200
+   */
   getEvents: function (req, res, next) {
     findAllEvents()
     .then(function (events) {
@@ -80,42 +111,11 @@ module.exports = {
 
   /*
     Input
-      userId String
-      eventId String
+     userId String
+     eventId String
     Output
-      response status 202
-  */
-  checkInUser: function (req, res, next) {
-    //TODO need to add logic to prevent user from checking in multiple times
-    var userId = req.params.id;
-    var eventId = req.body.eventId;
-    console.log("params>>>>>", req.params);
-    var userCondition = { _id : userId };
-    var userUpdate = { $push : { events : eventId } };
-    
-    updateUser(userCondition, userUpdate)
-    .then(function(){
-      console.log("HELLO")
-      var eventCondition = { _id : eventId };
-      var eventUpdate = { $inc : { playerCount : 1 } };
-
-      return updateEvent(eventCondition, eventUpdate);
-    })
-    .then(function(){
-      res.sendStatus(202);
-    })
-    .fail(function(err){
-      console.error(new Error('Could not update event'));
-    });
-  },
-
-  /*
-    Input
-      userId String
-      eventId String
-    Output
-      response status 202
-  */
+     response status 202
+   */
   removeUserEvent: function (req, res, next) {
     var userId = req.params.id;
     var eventId = req.body.eventId;
