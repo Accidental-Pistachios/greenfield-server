@@ -144,10 +144,55 @@ describe('Event Integration Tests', function() {
       });
     });
 
-    xit('Should remove an user from event', function(done) {
-      
-//      request(app)
-//      .delete('/api/events/users/'+)
+    it('Should remove an user from event, and delete the event if nobody is going', function(done) {
+      var testEventId;
+      var testUserId;
+      User.findOne({'firstName':'John'})
+      .then(function(user){
+        testUserId = user._id;
+        request(app)
+        .post('/api/events')
+        .send({
+          type: 'tennis',
+          location: '19th & Dolores St, San Francisco, CA 94114',
+          latitude: 37.759819,
+          longitude: -122.426036,
+          startTime: new Date('December 17, 2020 03:24:00'),
+          endTime: new Date('December 17, 2020 05:24:00'),
+          skillLevel: 'Hobby',
+          userId: testUserId
+        })
+        .expect(202)
+        .end(function(err) {
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {
+            Event.findOne({'type': 'tennis'})
+            .then(function (thisEvent) {
+              testEventId = thisEvent._id;
+              request(app)
+              .delete('/api/events/users/'+testUserId+'/')
+              .send({
+                eventId : testEventId
+              })
+              .expect(202)
+              .end(function(err, response){
+                if(err){
+                  console.error(err);
+                  done(err);
+                } else {
+                  User.findOne({'firstName' : 'John'})
+                  .then(function(user){
+                    expect(user.events.length).to.equal(0);
+                    done();
+                  });
+                }
+              })  
+            })
+          }
+        });
+      })
     });
 
     it('should check in a user', function(done){
