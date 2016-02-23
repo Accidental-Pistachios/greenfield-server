@@ -7,6 +7,13 @@ var createUser = Q.nbind(User.create, User);
 
 module.exports = {
   
+  /*
+    Input
+      id (userId) String
+    Output
+      events Array
+      response status 200
+  */
   getUserEvents : function(req, res, next){
     findUser({
       _id : req.params.id
@@ -19,6 +26,15 @@ module.exports = {
     });
   },
 
+  /*
+    Input
+      email String
+      password String
+    Output
+      token String
+      userId String
+      response status 202
+  */
   signIn : function(req, res, next){
     var email = req.body.email;
     var password = req.body.password;
@@ -44,7 +60,15 @@ module.exports = {
     });
   },
 
-  //
+  /*
+    Input
+      email String
+      password String
+    Output
+      token String
+      userId String
+      response status 201
+  */
   signUp : function(req, res, next){
     var email = req.body.email;
     var password = req.body.password;
@@ -58,7 +82,6 @@ module.exports = {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
-          events : [],
           password : req.body.password
         });
       }
