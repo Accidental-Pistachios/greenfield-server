@@ -11,6 +11,14 @@ var updateUser = Q.nbind(User.update, User);
 
 module.exports = {
 
+  /*
+   Input
+     userId String
+     eventId String
+   Output
+     response status 202
+  */
+
   checkInUser: function (req, res, next) {
     //TODO need to add logic to prevent user from checking in multiple times
     var userId = req.params.id;
@@ -32,6 +40,22 @@ module.exports = {
     });
   },
 
+  /*
+    Input
+     type String
+     location String
+     latitude Number
+     longitude Number
+     startTime Date
+     endTime Date
+     playerCount Number
+     skillLevel String
+     userId String
+
+    Output
+     event object
+     response status 202
+  */
   addEvent: function(req, res, next){
     //TODO check if an event already exists in time and place
     createEvent({
@@ -67,6 +91,14 @@ module.exports = {
     });
   },
 
+
+
+  /*
+    Input
+    Output
+     events Array
+     response status 200
+   */
   getEvents: function (req, res, next) {
     findAllEvents()
     .then(function (events) {
@@ -77,6 +109,13 @@ module.exports = {
     });
   },
 
+  /*
+    Input
+     userId String
+     eventId String
+    Output
+     response status 202
+   */
   removeUserEvent: function (req, res, next) {
     var userId = req.params.id;
     var eventId = req.body.eventId;
