@@ -18,7 +18,8 @@ module.exports = function(app, express) {
   //events routes
   //get requests
   app.get('/api/events', events.getEvents);
-
+  app.get('/api/events/:id', events.getEvent);
+  
   //post requests
   app.post('/api/events', events.addEvent);
   app.post('/api/events/users/:id', events.checkInUser);

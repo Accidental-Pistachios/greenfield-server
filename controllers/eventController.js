@@ -142,5 +142,25 @@ module.exports = {
     .fail(function (error) {
       next(error);
     });
+  },
+
+  getEvent: function(req, res, next){
+    var eventId = req.params.id;
+
+    findEvent({ _id : eventId })
+    .then(function(foundEvent){
+      res.json(foundEvent);
+    });
   }
+
+
 };
+
+
+
+
+
+
+
+
+
