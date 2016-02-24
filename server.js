@@ -2,9 +2,9 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/pug');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/pug');
 
-var port = 3000;
+var port = process.env.PORT || 3000;
 
 require('./utils/middleware.js')(app, express);
 require('./utils/router.js')(app, express);
