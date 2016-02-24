@@ -4,6 +4,7 @@ var jwt = require('jwt-simple');
 
 var findUser = Q.nbind(User.findOne, User);
 var createUser = Q.nbind(User.create, User);
+// var findById = Q.nbind(User.findById, User);
 
 module.exports = {
   
@@ -15,8 +16,9 @@ module.exports = {
       response status 200
   */
   getUserEvents : function(req, res, next){
+
     findUser({
-      _id : req.params.id
+      _id : req.body.userId
     })
     .then(function(user){
       res.status(200).json(user.events);

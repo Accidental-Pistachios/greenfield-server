@@ -73,6 +73,7 @@ module.exports = {
       var userIdObj = {
         id : req.body.userId || 'faking userID, frontend attach uId here!!!'
       };
+
       var eventIdObj = {
         eventId : newEvent._id
       };
@@ -83,7 +84,7 @@ module.exports = {
       }
     })
     .then(function (newReq) {
-      return module.exports.checkInUser(newReq, res)
+      return module.exports.checkInUser(newReq, res);
     })
 
     .fail(function(err){
