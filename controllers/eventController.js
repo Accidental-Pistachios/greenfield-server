@@ -20,7 +20,6 @@ module.exports = {
   */
 
   checkInUser: function (req, res, next) {
-    console.log("CHECK IN USER");
     //TODO need to add logic to prevent user from checking in multiple times
     var userId = req.params.id;
     var eventId = req.body.eventId;
@@ -58,7 +57,6 @@ module.exports = {
      response status 202
   */
   addEvent: function(req, res, next){
-    console.log("ADD EVENT");
     //TODO check if an event already exists in time and place
     createEvent({
       type : req.body.type,
@@ -103,7 +101,6 @@ module.exports = {
      response status 200
    */
   getEvents: function (req, res, next) {
-    console.log("GET EVENTS")
     findAllEvents()
     .then(function (events) {
       res.status(200).json(events);
@@ -121,7 +118,6 @@ module.exports = {
      response status 202
    */
   removeUserEvent: function (req, res, next) {
-    console.log("REMOVE USER EVENTS")
     var userId = req.params.id;
     var eventId = req.body.eventId;
     findUser({_id: userId})

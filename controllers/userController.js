@@ -16,11 +16,9 @@ module.exports = {
       response status 200
   */
   getUserEvents : function(req, res, next){
-    console.log("GET USER EVENTS");
-    console.log(">>>>>>>", req.body.userId);
-    var id = mongoose.Types.ObjectId(req.body.userId);
+
     findUser({
-      _id : id
+      _id : req.body.userId
     })
     .then(function(user){
       res.status(200).json(user.events);
@@ -40,7 +38,6 @@ module.exports = {
       response status 202
   */
   signIn : function(req, res, next){
-    console.log("SIGNIN")
     var email = req.body.email;
     var password = req.body.password;
     findUser({ email : email })
@@ -75,7 +72,6 @@ module.exports = {
       response status 201
   */
   signUp : function(req, res, next){
-    console.log("SIGNUP")
     var email = req.body.email;
     var password = req.body.password;
 
