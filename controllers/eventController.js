@@ -118,8 +118,10 @@ module.exports = {
      response status 202
    */
   removeUserEvent: function (req, res, next) {
-    var userId = req.params.id;
+   
+    var userId = req.body.userId;
     var eventId = req.body.eventId;
+
     findUser({_id: userId})
     .then(function (user) {
       for(var i = 0; i< user.events.length; i ++) {
@@ -142,5 +144,16 @@ module.exports = {
     .fail(function (error) {
       next(error);
     });
+  },
+
+  getEvent: function(req, res, next){
+    var eventId = req.params.id;
+
+    findEvent({ _id : eventId })
+    .then(function(foundEvent){
+      res.json(foundEvent);
+    });
   }
+
+
 };
