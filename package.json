@@ -39,5 +39,9 @@
     "mocha": "^2.4.5",
     "should": "^8.2.2",
     "supertest": "^1.2.0"
-  }
+  },
+  "scripts": {
+   "postinstall": "grunt uglify",
+   "start": "node server.js"
+ }
 }
