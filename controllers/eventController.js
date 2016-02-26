@@ -21,7 +21,7 @@ module.exports = {
 
   checkInUser: function (req, res, next) {
     //TODO need to add logic to prevent user from checking in multiple times
-    var userId = req.params.id;
+    var userId = req.body.userId;
     var eventId = req.body.eventId;
     var userCondition = { _id : userId };
     var userUpdate = { $push : { events : eventId.toString() } };
