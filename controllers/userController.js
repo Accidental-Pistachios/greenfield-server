@@ -1,10 +1,11 @@
 var User = require('../models/userModel.js');
+var Event = require('../models/eventModel.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
 
 var findUser = Q.nbind(User.findOne, User);
 var createUser = Q.nbind(User.create, User);
-// var findById = Q.nbind(User.findById, User);
+var findAllEvents = Q.nbind(Event.find, Event);
 
 module.exports = {
   
@@ -16,12 +17,30 @@ module.exports = {
       response status 200
   */
   getUserEvents : function(req, res, next){
-
+    
+    
     findUser({
       _id : req.body.userId
     })
     .then(function(user){
-      res.status(200).json(user.events);
+
+      findAllEvents().
+      then(function(events){
+
+        var validIds = events.map(function(foundEvent){
+          return foundEvent._id.toString();
+        });
+
+        for(var i  = 0; i < user.events.length; i++){
+
+          if(validIds.indexOf( user.events[i].toString() ) < 0){
+            user.events.splice(i, 1);
+            user.save();
+          }
+        }
+        
+        res.status(200).json(user.events);
+      });
     })
     .fail(function(err){
       next(err);
