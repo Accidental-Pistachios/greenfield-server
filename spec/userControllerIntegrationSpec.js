@@ -11,6 +11,8 @@ var clearDB = function (done) {
   mongoose.connection.collections['users'].remove(done);
 };
 
+var token;
+
 describe('', function() {
 
   beforeEach(function(done) {
@@ -35,7 +37,20 @@ describe('', function() {
           password: 'rockon'
         }
       ];
-      User.create(users, done);
+      User.create(users, function() {
+
+        request(app)
+        .post('/api/users/signin')
+        .send({
+          email: 'j@b.com', 
+          password: 'rockon'
+        })
+        .end(function(err, res) {
+          token = res.body.token;
+          done();
+        });
+
+      });
     });
 
   });
@@ -91,16 +106,16 @@ describe('', function() {
 
   describe('User event retrieval :', function(){
     var testUserId;
-
     
     it('gets a user\'s events', function(done){
       
-      User.findOne({'firstName':'Magee'})
+      User.findOne({'email':'j@b.com'})
       .then(function(user){
         testUserId = user._id;
        
       request(app)
       .get('/api/users/'+testUserId+'/event')
+      .set('x-access-token', token)
       .expect(200)
       .end(function(err, response){
         if(err){

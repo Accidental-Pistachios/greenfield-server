@@ -69,19 +69,13 @@ module.exports = {
       skillLevel : req.body.skillLevel
     })
     .then(function (newEvent){
-      //TODO : Make sure that front end attaches userId to req.body
-      var userIdObj = {
-        id : req.body.userId || 'faking userID, frontend attach uId here!!!'
-      };
 
-      var eventIdObj = {
-        eventId : newEvent._id
+      return {
+        body : {
+          userId: req.body.userId,
+          eventId: newEvent._id
+        }
       };
-      
-      return newReq = {
-        params : userIdObj,
-        body : eventIdObj
-      }
     })
     .then(function (newReq) {
       return module.exports.checkInUser(newReq, res);
