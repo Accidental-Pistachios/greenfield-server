@@ -21,6 +21,7 @@ module.exports = {
       _id : req.body.userId
     })
     .then(function(user){
+      //refactor to use findOne for efficiency
       findAllEvents().
       then(function (events) {
         var validIds = events.map(function(foundEvent){
