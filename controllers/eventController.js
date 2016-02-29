@@ -69,7 +69,6 @@ module.exports = {
       skillLevel : req.body.skillLevel
     })
     .then(function (newEvent){
-
       return {
         body : {
           userId: req.body.userId,

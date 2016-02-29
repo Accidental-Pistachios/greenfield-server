@@ -35,4 +35,5 @@ var eventsSchema = new mongoose.Schema({
   }
 });
 
+eventsSchema.index({ endTime: 1 }, { expireAfterSeconds : 0 });
 module.exports = mongoose.model('events', eventsSchema);
