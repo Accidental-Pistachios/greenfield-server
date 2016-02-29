@@ -26,12 +26,19 @@ module.exports = {
 
       findAllEvents().
       then(function(events){
-        for(var i  = 0; i < events.length; i++){
-          if(user.events.indexOf( events[i]._id ) < 0){
+
+        var validIds = events.map(function(foundEvent){
+          return foundEvent._id.toString();
+        });
+
+        for(var i  = 0; i < user.events.length; i++){
+
+          if(validIds.indexOf( user.events[i].toString() ) < 0){
             user.events.splice(i, 1);
             user.save();
           }
         }
+        
         res.status(200).json(user.events);
       });
     })
