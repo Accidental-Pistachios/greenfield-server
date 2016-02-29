@@ -113,7 +113,7 @@ module.exports = {
     findUser({_id: userId})
     .then(function (user) {
       for(var i = 0; i< user.events.length; i ++) {
-        if(user.events[i] === eventId) {
+        if (user.events[i] === eventId) {
           user.events.splice(i, 1);
           user.save();
           return updateEvent({ _id : eventId }, { $inc : { playerCount : -1 } })

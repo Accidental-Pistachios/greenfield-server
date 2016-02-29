@@ -21,7 +21,8 @@ module.exports = {
       _id : req.body.userId
     })
     .then(function(user){
-      //refactor to use findOne for efficiency
+      //TODO:refactor to use findOne for efficiency
+      //removes expired events from user.events array
       findAllEvents().
       then(function (events) {
         var validIds = events.map(function(foundEvent){
@@ -29,7 +30,7 @@ module.exports = {
         });
 
         for(var i  = 0; i < user.events.length; i++){
-          if(validIds.indexOf(user.events[i].toString()) < 0){
+          if (validIds.indexOf(user.events[i].toString()) < 0) {
             user.events.splice(i, 1);
             user.save();
           }
