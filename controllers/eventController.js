@@ -66,10 +66,10 @@ module.exports = {
       startTime : req.body.startTime,
       endTime : req.body.endTime,
       playerCount : req.body.playerCount,
+      expireAt : req.body.endTime,
       skillLevel : req.body.skillLevel
     })
     .then(function (newEvent){
-
       return {
         body : {
           userId: req.body.userId,

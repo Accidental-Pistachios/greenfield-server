@@ -29,10 +29,15 @@ var eventsSchema = new mongoose.Schema({
     type : Number,
     default : 1
   },
+  expireAt: {
+      type: Date,
+      required: true
+  },
   skillLevel : {
     type : String,
     default : 'Hobby'
   }
 });
 
+eventsSchema.index({ expireAt: 1 }, { expireAfterSeconds : 0 });
 module.exports = mongoose.model('events', eventsSchema);
