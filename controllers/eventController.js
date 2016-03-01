@@ -139,6 +139,13 @@ module.exports = {
     });
   },
 
+  /*
+    Input
+     eventId String
+    Output
+     event object
+     response status 200
+   */
   getEvent: function(req, res, next){
     var eventId = req.params.id;
 
