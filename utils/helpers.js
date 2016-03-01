@@ -17,6 +17,5 @@ module.exports = {
     } catch (error) {
       return next(error);
     }
-
   }
 };

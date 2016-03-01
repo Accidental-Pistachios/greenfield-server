@@ -3,7 +3,6 @@ var expect = require('chai').expect;
 var request = require('supertest');
 var mongoose = require('mongoose');
 
-
 var User = require('../models/userModel');
 var userController = require('../controllers/userController');
 
@@ -49,39 +48,37 @@ describe('', function() {
           token = res.body.token;
           done();
         });
-
       });
     });
-
   });
 
   describe('Account Creation:', function() {
 
     it('Signup creates a new user', function(done) {
       request(app)
-        .post('/api/users/signup')
-        .send({
-          'email': 'Svnh@gmail.com',
-          'firstName': 'Svnh',
-          'lastName': 'Smith',
-          'password': 'Svnh' })
-        .expect(201)
-        .end(function(err) {
-          if (err) {
-            console.error(err);
-            done(err);
-          } else {
-            User.findOne({'email': 'Svnh@gmail.com'})
-            .exec(function(err, user) {
-              expect(user.email).to.equal('Svnh@gmail.com');
-              expect(user.firstName).to.equal('Svnh');
-              expect(user.lastName).to.equal('Smith');
-              expect(user.password).to.exist;
-              expect(user.events).to.exist;
-              done();
-            });
-          }
-        });
+      .post('/api/users/signup')
+      .send({
+        'email': 'Svnh@gmail.com',
+        'firstName': 'Svnh',
+        'lastName': 'Smith',
+        'password': 'Svnh' })
+      .expect(201)
+      .end(function(err) {
+        if (err) {
+          console.error(err);
+          done(err);
+        } else {
+          User.findOne({'email': 'Svnh@gmail.com'})
+          .exec(function(err, user) {
+            expect(user.email).to.equal('Svnh@gmail.com');
+            expect(user.firstName).to.equal('Svnh');
+            expect(user.lastName).to.equal('Smith');
+            expect(user.password).to.exist;
+            expect(user.events).to.exist;
+            done();
+          });
+        }
+      });
     });
 
     it('Signs in an existing user', function(done){
@@ -112,20 +109,20 @@ describe('', function() {
       User.findOne({'email':'j@b.com'})
       .then(function(user){
         testUserId = user._id;
-       
-      request(app)
-      .get('/api/users/'+testUserId+'/event')
-      .set('x-access-token', token)
-      .expect(200)
-      .end(function(err, response){
-        if(err){
-          console.error(err);
-          done(err);
-        } else {
-          expect(response.body).to.be.a('array');
-          done();
-        }
-      });
+         
+        request(app)
+        .get('/api/users/'+testUserId+'/event')
+        .set('x-access-token', token)
+        .expect(200)
+        .end(function(err, response){
+          if(err){
+            console.error(err);
+            done(err);
+          } else {
+            expect(response.body).to.be.a('array');
+            done();
+          }
+        });
       });
     });
   });

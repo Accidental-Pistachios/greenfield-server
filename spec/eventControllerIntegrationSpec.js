@@ -6,10 +6,8 @@ var mongoose = require('mongoose');
 var Event = require('../models/eventModel');
 var eventController = require('../controllers/eventController');
 
-
 var User = require('../models/userModel');
 var userController = require('../controllers/userController');
-
 
 var clearDB = function (done) {
   mongoose.connection.collections['events'].remove(function(){
@@ -45,8 +43,6 @@ describe('Event Integration Tests', function() {
           skillLevel: 'Hobby'
         }
       ];
-
-      
  
       var users = [
         {
@@ -71,7 +67,6 @@ describe('Event Integration Tests', function() {
 
       Event.create(events, function(){
         User.create(users, function() {
-
           request(app)
           .post('/api/users/signin')
           .send({
@@ -82,10 +77,8 @@ describe('Event Integration Tests', function() {
             token = res.body.token;
             done();
           });
-
         });
       });
-
     });
   });
 
