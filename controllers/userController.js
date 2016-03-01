@@ -10,30 +10,25 @@ var findAllEvents = Q.nbind(Event.find, Event);
 module.exports = {
   
   /*
-    Input
-      id (userId) String
-    Output
-      events Array
+    Request Body
+      userId String
+    Response
+      user.events Array
       response status 200
   */
   getUserEvents : function(req, res, next){
-    
-    
     findUser({
       _id : req.body.userId
     })
     .then(function(user){
-
       findAllEvents().
-      then(function(events){
-
+      then(function (events) {
         var validIds = events.map(function(foundEvent){
           return foundEvent._id.toString();
         });
 
         for(var i  = 0; i < user.events.length; i++){
-
-          if(validIds.indexOf( user.events[i].toString() ) < 0){
+          if(validIds.indexOf(user.events[i].toString()) < 0){
             user.events.splice(i, 1);
             user.save();
           }
@@ -48,10 +43,10 @@ module.exports = {
   },
 
   /*
-    Input
+    Request Body
       email String
       password String
-    Output
+    Response
       token String
       userId String
       response status 202
@@ -82,10 +77,10 @@ module.exports = {
   },
 
   /*
-    Input
+    Request Body
       email String
       password String
-    Output
+    Response
       token String
       userId String
       response status 201
@@ -112,7 +107,7 @@ module.exports = {
       var userId = user._id;
       res.status(201).json({ token : token, userId : userId });
     })
-    .fail(function(err){
+    .fail(function (err) {
       next(new Error(err));
     });
   }

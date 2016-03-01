@@ -12,10 +12,10 @@ var updateUser = Q.nbind(User.update, User);
 module.exports = {
 
   /*
-   Input
+   Request Body
      userId String
      eventId String
-   Output
+   Response
      response status 202
   */
 
@@ -27,21 +27,21 @@ module.exports = {
     var userUpdate = { $push : { events : eventId.toString() } };
     
     updateUser(userCondition, userUpdate)
-    .then(function(){
+    .then(function () {
       var eventCondition = { _id : eventId };
       var eventUpdate = { $inc : { playerCount : 1 } };
       return updateEvent(eventCondition, eventUpdate);
     })
-    .then(function(ue){
+    .then(function () {
       res.sendStatus(202); //update the event playercount
     })
-    .fail(function(err){
+    .fail(function (err) {
       console.error(new Error('Could not update event'));
     });
   },
 
   /*
-    Input
+    Request Body
      type String
      location String
      latitude Number
@@ -51,8 +51,7 @@ module.exports = {
      playerCount Number
      skillLevel String
      userId String
-
-    Output
+    Response
      event object
      response status 202
   */
@@ -79,17 +78,14 @@ module.exports = {
     .then(function (newReq) {
       return module.exports.checkInUser(newReq, res);
     })
-
-    .fail(function(err){
+    .fail(function (err) {
      next(err);
     });
   },
 
-
-
   /*
-    Input
-    Output
+    Request Body
+    Response
      events Array
      response status 200
    */
@@ -104,14 +100,13 @@ module.exports = {
   },
 
   /*
-    Input
+    Request Body
      userId String
      eventId String
-    Output
+    Response
      response status 202
    */
   removeUserEvent: function (req, res, next) {
-   
     var userId = req.body.userId;
     var eventId = req.body.eventId;
 
@@ -129,7 +124,7 @@ module.exports = {
       return findEvent({ _id : eventId })
     })
     .then(function (foundEvent) {
-      if (foundEvent.playerCount === 0){
+      if (foundEvent.playerCount === 0) {
         foundEvent.remove();
       }
       res.sendStatus(202);
@@ -140,20 +135,17 @@ module.exports = {
   },
 
   /*
-    Input
-     eventId String
-    Output
-     event object
-     response status 200
+    Request Body
+    Response
+      event object
+      response status 200
    */
   getEvent: function(req, res, next){
     var eventId = req.params.id;
 
     findEvent({ _id : eventId })
-    .then(function(foundEvent){
+    .then(function (foundEvent) {
       res.json(foundEvent);
     });
   }
-
-
 };
